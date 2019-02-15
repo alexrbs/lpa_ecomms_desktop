@@ -1,5 +1,6 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 //reference library of Input/Output operations 
 import java.net.URL;
 import java.sql.*;
@@ -10,9 +11,13 @@ import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.table.*;
 
+import java.sql.*;
+import java.sql.SQLException;
+/*
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.ResultSet;
 import com.mysql.jdbc.Statement;
+*/
 import java.util.regex.*;
 
 
@@ -40,20 +45,30 @@ public class main extends JFrame {
     public JSeparator mnMenuSep_1,mnMenuSep_2;
     public Dimension screenDims = Toolkit.getDefaultToolkit().getScreenSize();
     public JMenuBar lpa_menuBar;
-    public JInternalFrame ifLogin,ifSearchStock,ifStock,ifSales,ifSearchUsers,ifUsers,ifNewInvoice,ifSearchClients,ifEditClient,ifHelpGuide,ifAbout;
+    public JInternalFrame ifLogin,ifSearchStock,ifStock,ifSales,ifSearchUsers,
+    						ifUsers,ifNewInvoice,ifSearchClients,ifEditClient,
+    						ifHelpGuide,ifAbout;
     public JLayeredPane layeredPaneBG,layeredPaneFG;
-    public JScrollPane searchScrollPaneStock,searchScrollPaneUsers,searchScrollPaneSales,newInvoiceScrollPane,searchScrollPaneClients;
-    public JTable tblSearchStock,tblSearchUsers,tblSearchSales,tblInvoicedItems,tblSearchClients;
-    public DefaultTableModel stockModel,usersModel,invoicesModel,invoicedTtems,clientsModel;
+    public JScrollPane searchScrollPaneStock,searchScrollPaneUsers,
+    					searchScrollPaneSales,
+    					newInvoiceScrollPane,searchScrollPaneClients;
+    public JTable tblSearchStock,tblSearchUsers,tblSearchSales,tblInvoicedItems,
+    				tblSearchClients;
+    public DefaultTableModel stockModel,usersModel,invoicesModel,invoicedTtems,
+    							clientsModel;
     public JTextField txtUsername,txtClientsSearch;
     public JPasswordField txtPassword,txtEditUserPassword;
     public JComboBox<String> cboxUserGroup = new JComboBox(UserGroups.values());
-    public JButton btnDeleteUser,btnDeleteStock,btnDeleteClient, btnNewClients, btnNewSales,btnNewStock;
+    public JButton btnDeleteUser,btnDeleteStock,btnDeleteClient, btnNewClients,
+    				btnNewSales,btnNewStock;
     public Connection con;
     public Statement st;
     public JLabel lblDisplayName = new JLabel();
     public JTextField txtStockSearch,txtStockID,txtStockName,txtStockDes,
-    					txtUsersSearch,txtEditUsername,txtUserID,txtUserFirstName,txtUserLastName,txtSalesSearch,txtClientIDSearch,txtCliendId,txtName,txtPhone,txtItemID,txtNameItem,txtPrice,txtQuantity;
+    					txtUsersSearch,txtEditUsername,txtUserID,txtUserFirstName,
+    					txtUserLastName,txtSalesSearch,txtClientIDSearch,txtCliendId,
+    					txtName,txtPhone,txtItemID,txtNameItem,txtPrice,txtQuantity,
+    					txtStockOnHand, txtStockPrice;
 						//declare all variables used in the program
     JRadioButton rdbtnActive,rdbtnInactive;
 
@@ -376,7 +391,7 @@ public class main extends JFrame {
 		lblStockDes.setBounds(10, 73, 80, 14);
 		ifStock.getContentPane().add(lblStockDes);
 		
-		txtStockOnHand = new JTextField();
+		JTextField txtStockOnHand = new JTextField();
 		txtStockOnHand.setForeground(Color.WHITE);
 		txtStockOnHand.setColumns(10);
 		txtStockOnHand.setBackground(Color.DARK_GRAY);
@@ -389,7 +404,7 @@ public class main extends JFrame {
 		lblStockOnHand.setBounds(10, 104, 80, 14);
 		ifStock.getContentPane().add(lblStockOnHand);
 		
-		txtStockPrice = new JTextField();
+		JTextField txtStockPrice = new JTextField();
 		txtStockPrice.setForeground(Color.WHITE);
 		txtStockPrice.setColumns(10);
 		txtStockPrice.setBackground(Color.DARK_GRAY);
@@ -807,18 +822,20 @@ public class main extends JFrame {
 	        	txtStockOnHand.setText(rs.getString("lpa_stock_onhand"));
 	        	txtStockPrice.setText(rs.getString("lpa_stock_price"));
 	        	
-	        	/*Dimension ifS = ifSearchStock.getSize();
+	        	/*
+	        	Dimension ifS = ifSearchStock.getSize();
 	        	Point IFSS = ifSearchStock.getLocation();
 	        	int ifsX = (int) IFSS.getX(); 
 	        	int ifsY = (int) (IFSS.getY() + ifS.height) + 1; 
-	        	ifStock.setLocation(ifsX,ifsY);*/
+	        	ifStock.setLocation(ifsX,ifsY);
+	        	*/
 	        	ifStock.setVisible(true);
 	        }
 		} catch (SQLException e) {
         	System.out.print(e.getMessage().toString());
 		}		
 	}
-	public void saveStockData(final String //pass value by reference) {
+	public void saveStockData(final String saveData) {
 		try {
 			if(validateStockInfo())
 			{
@@ -834,7 +851,7 @@ public class main extends JFrame {
 						    "lpa_stock_desc = '" + txtStockDes.getText() + "'," +
 						    "lpa_stock_onhand = '" + txtStockOnHand.getText() + "'," +
 						    "lpa_stock_price = '" + txtStockPrice.getText() + "' " +
-						    "WHERE lpa_stock_ID = '"+StockID+"' LIMIT 1;"
+						    "WHERE lpa_stock_ID = '"+ txtStockID.getText() +"' LIMIT 1;"
 				    );
 				}
 				searchStockData(txtStockSearch.getText().toString());
@@ -867,8 +884,8 @@ public class main extends JFrame {
 
 			ResultSet rs = (ResultSet) st.executeQuery(
 				"SELECT * FROM lpa_users WHERE lpa_User_status <> 'D' AND " + 
-			    "(lpa_User_ID LIKE '%" + /*pass value by reference*/ + "%' OR " +
-			    "lpa_user_username LIKE '%" + /*pass value by reference*/ + "%');" 
+			    "(lpa_User_ID LIKE '%" + txtUserID /*pass value by reference*/ + "%' OR " +
+			    "lpa_user_username LIKE '%" + txtUserFirstName /*pass value by reference*/ + "%');" 
 			);
 			if(rs.next()) {
 			 usersModel = (DefaultTableModel) tblSearchUsers.getModel();
@@ -1882,7 +1899,7 @@ public class main extends JFrame {
 		if (result == JOptionPane.YES_OPTION) { 
 			try {
 				st.executeUpdate("UPDATE lpa_clients SET lpa_client_status = 'D'" + " WHERE lpa_client_ID = '"
-						+ /*referenced value */ + "' LIMIT 1;");
+						+ txtClientIDSearch /*referenced value */ );
 				searchClientsData(txtClientsSearch.getText().toString());
 				JOptionPane.showMessageDialog(null, "Record deleted!");
 				ifEditClient.setVisible(false);
