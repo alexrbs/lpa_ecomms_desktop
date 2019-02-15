@@ -1,9 +1,10 @@
 import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
-//reference library of Input/Output operations 
+//reference library of Input/Output operations
 import java.net.URL;
 import java.sql.*;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Random;
 import java.util.Date;
@@ -13,11 +14,9 @@ import javax.swing.table.*;
 
 import java.sql.*;
 import java.sql.SQLException;
-/*
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.ResultSet;
 import com.mysql.jdbc.Statement;
-*/
 import java.util.regex.*;
 
 
@@ -28,8 +27,8 @@ public class main extends JFrame {
      * Declaring constants variables
      * */
     private static final String MySQL_DB = "lpa_ecomms";
-    public static final String user      = "lpa_ecomms";
-    public static final String pass      = "5XmvHX4djjzQRMRS"; 
+    public static final String user      = "root";
+    public static final String pass      = ""; 
     public static final String url       = "jdbc:mysql://localhost:3306/" + MySQL_DB;
 	
     /** 
@@ -45,31 +44,25 @@ public class main extends JFrame {
     public JSeparator mnMenuSep_1,mnMenuSep_2;
     public Dimension screenDims = Toolkit.getDefaultToolkit().getScreenSize();
     public JMenuBar lpa_menuBar;
-    public JInternalFrame ifLogin,ifSearchStock,ifStock,ifSales,ifSearchUsers,
-    						ifUsers,ifNewInvoice,ifSearchClients,ifEditClient,
-    						ifHelpGuide,ifAbout;
+    public JInternalFrame ifLogin,ifSearchStock,ifStock,ifSales,ifSearchUsers,ifUsers,ifNewInvoice,ifSearchClients,ifEditClient,ifHelpGuide,ifAbout;
     public JLayeredPane layeredPaneBG,layeredPaneFG;
-    public JScrollPane searchScrollPaneStock,searchScrollPaneUsers,
-    					searchScrollPaneSales,
-    					newInvoiceScrollPane,searchScrollPaneClients;
-    public JTable tblSearchStock,tblSearchUsers,tblSearchSales,tblInvoicedItems,
-    				tblSearchClients;
-    public DefaultTableModel stockModel,usersModel,invoicesModel,invoicedTtems,
-    							clientsModel;
+    public JScrollPane searchScrollPaneStock,searchScrollPaneUsers,searchScrollPaneSales,newInvoiceScrollPane,searchScrollPaneClients;
+    public JTable tblSearchStock,tblSearchUsers,tblSearchSales,tblInvoicedItems,tblSearchClients;
+    public DefaultTableModel stockModel,usersModel,invoicesModel,invoicedTtems,clientsModel;
     public JTextField txtUsername,txtClientsSearch;
     public JPasswordField txtPassword,txtEditUserPassword;
     public JComboBox<String> cboxUserGroup = new JComboBox(UserGroups.values());
-    public JButton btnDeleteUser,btnDeleteStock,btnDeleteClient, btnNewClients,
-    				btnNewSales,btnNewStock;
+    public JButton btnDeleteUser,btnDeleteStock,btnDeleteClient, btnNewClients, btnNewSales,btnNewStock;
     public Connection con;
     public Statement st;
     public JLabel lblDisplayName = new JLabel();
-    public JTextField txtStockSearch,txtStockID,txtStockName,txtStockDes,
-    					txtUsersSearch,txtEditUsername,txtUserID,txtUserFirstName,
-    					txtUserLastName,txtSalesSearch,txtClientIDSearch,txtCliendId,
-    					txtName,txtPhone,txtItemID,txtNameItem,txtPrice,txtQuantity,
-    					txtStockOnHand, txtStockPrice;
-						//declare all variables used in the program
+    public JTextField txtStockSearch,
+    					txtStockID,txtStockName,txtStockDes,
+    					txtUsersSearch,txtEditUsername,txtUserID,
+    					txtUserFirstName,txtUserLastName,txtSalesSearch,
+    					txtClientIDSearch,txtCliendId,txtName,
+    					txtPhone,txtItemID,txtNameItem,txtPrice,
+    					txtQuantity,txtStockOnHand,txtStockPrice;					
     JRadioButton rdbtnActive,rdbtnInactive;
 
     public String saveMode;
@@ -127,7 +120,7 @@ public class main extends JFrame {
 		lpa_mntmStockControl.setIcon(stockIcon);
 		lpa_mntmStockControl.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				//centerJIF(ifSearchStock,"app");
+				centerJIF(ifSearchStock,"app");
 				ifSearchStock.setVisible(true);
 ;			}
 		});
@@ -140,7 +133,8 @@ public class main extends JFrame {
 		
 		JMenuItem lpa_mntmInvoices = new JMenuItem("Invoices");
 		lpa_mntmInvoices.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
+			public void actionPerformed(ActionEvent arg0) {		
+				centerJIF(ifSales,"app");
 				ifSales.setVisible(true);  
 			}
 		});
@@ -151,6 +145,7 @@ public class main extends JFrame {
 		JMenuItem lpa_mntmClients = new JMenuItem("Clients");
 		lpa_mntmClients.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				centerJIF(ifSearchClients,"app");
 				ifSearchClients.setVisible(true);  
 			}
 		});
@@ -172,8 +167,9 @@ public class main extends JFrame {
 		lpa_mntmMyUserDetails.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				getUsersData(currentUserID);
+				centerJIF(ifUsers,"app");
 				ifUsers.setVisible(true);
-				}
+			}
 		});
 		lpa_mnMenu.add(lpa_mntmMyUserDetails);
 		
@@ -184,7 +180,8 @@ public class main extends JFrame {
 		
 		lpa_mntmUserMan.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				ifSearchUsers.setVisible(true);  
+				centerJIF(ifSearchUsers,"app");
+				ifSearchUsers.setVisible(true);  				
 			}
 		});
 		
@@ -279,8 +276,7 @@ public class main extends JFrame {
 		ifLogin.getContentPane().add(layeredPaneBG);
 		layeredPaneFG = new JLayeredPane();
 		layeredPaneFG.setBounds(0, 0, 388, 178);
-		layeredPaneBG.add(layeredPaneFG);
-				
+		layeredPaneBG.add(layeredPaneFG);				
 				JLabel lblUserName = new JLabel("User name:");
 				lblUserName.setFont(new Font("Tahoma", Font.BOLD, 11));
 				lblUserName.setBounds(10, 100, 81, 14);
@@ -313,7 +309,7 @@ public class main extends JFrame {
 				JButton btnLogin = new JButton("Login");
 				btnLogin.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-						//call relevant function();
+						do_login();
 					}
 				});
 				btnLogin.setBounds(283, 148, 89, 23);
@@ -338,10 +334,10 @@ public class main extends JFrame {
 		rightRenderer.setHorizontalAlignment( JLabel.RIGHT );
 		centerRenderer.setHorizontalAlignment( JLabel.CENTER );
 		
-		/*
-		tblSearchStock.getTableHeader().getColumnModel().getColumn(2).setHeaderRenderer(centerRenderer);
-		tblSearchStock.getTableHeader().getColumnModel().getColumn(3).setHeaderRenderer(rightRenderer);
-		*/
+		
+		//////tblSearchStock.getTableHeader().getColumnModel().getColumn(2).setHeaderRenderer(centerRenderer);
+		//tblSearchStock.getTableHeader().getColumnModel().getColumn(3).setHeaderRenderer(rightRenderer);
+		
 		
 		ifStock = new JInternalFrame("LPA - Stock Record");
 		ifStock.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
@@ -391,7 +387,7 @@ public class main extends JFrame {
 		lblStockDes.setBounds(10, 73, 80, 14);
 		ifStock.getContentPane().add(lblStockDes);
 		
-		JTextField txtStockOnHand = new JTextField();
+		txtStockOnHand = new JTextField();
 		txtStockOnHand.setForeground(Color.WHITE);
 		txtStockOnHand.setColumns(10);
 		txtStockOnHand.setBackground(Color.DARK_GRAY);
@@ -404,7 +400,7 @@ public class main extends JFrame {
 		lblStockOnHand.setBounds(10, 104, 80, 14);
 		ifStock.getContentPane().add(lblStockOnHand);
 		
-		JTextField txtStockPrice = new JTextField();
+		txtStockPrice = new JTextField();
 		txtStockPrice.setForeground(Color.WHITE);
 		txtStockPrice.setColumns(10);
 		txtStockPrice.setBackground(Color.DARK_GRAY);
@@ -420,7 +416,7 @@ public class main extends JFrame {
 		JButton btnStockSave = new JButton("Save");
 		btnStockSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				//call relevant function(txtStockID.getText());
+				saveStockData(txtStockID.getText());
 			}
 		});
 		btnStockSave.setForeground(Color.WHITE);
@@ -435,6 +431,8 @@ public class main extends JFrame {
 		btnDeleteStock = new JButton("Delete");
 		btnDeleteStock.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				deleteStock(txtStockID.getText());
+				
 				//call relevant function(txtStockID.getText());
 			}
 
@@ -460,7 +458,7 @@ public class main extends JFrame {
 				txtStockSearch = new JTextField();
 				txtStockSearch.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent arg0) {
-						searchStockData(txtStockSearch.getText().toString());
+						saveStockData(txtStockSearch.getText().toString());
 					}
 				});
 				txtStockSearch.setForeground(Color.WHITE);
@@ -822,27 +820,36 @@ public class main extends JFrame {
 	        	txtStockOnHand.setText(rs.getString("lpa_stock_onhand"));
 	        	txtStockPrice.setText(rs.getString("lpa_stock_price"));
 	        	
-	        	/*
-	        	Dimension ifS = ifSearchStock.getSize();
+	        	/*Dimension ifS = ifSearchStock.getSize();
 	        	Point IFSS = ifSearchStock.getLocation();
 	        	int ifsX = (int) IFSS.getX(); 
 	        	int ifsY = (int) (IFSS.getY() + ifS.height) + 1; 
-	        	ifStock.setLocation(ifsX,ifsY);
-	        	*/
+	        	ifStock.setLocation(ifsX,ifsY);*/
 	        	ifStock.setVisible(true);
 	        }
 		} catch (SQLException e) {
         	System.out.print(e.getMessage().toString());
 		}		
 	}
-	public void saveStockData(final String saveData) {
+	//pass value by reference
+	public void saveStockData(final String StockID) {
 		try {
 			if(validateStockInfo())
 			{
 				if(saveMode == "new") {
-					st.executeUpdate("INSERT INTO lpa_stock "
-							+ "(lpa_stock_ID,lpa_stock_name,lpa_stock_desc,lpa_stock_onhand,lpa_stock_price,lpa_stock_status) " + "VALUES ('"
-							+ txtStockID.getText() + "'"); //complete the sql statement, matching database coln names and corresponding values
+					String _query = "INSERT INTO lpa_stock "
+							+ "(lpa_stock_ID,"
+							+ "lpa_stock_name,"
+							+ "lpa_stock_desc,"
+							+ "lpa_stock_onhand,"
+							+ "lpa_stock_price" +
+							") VALUES ('"
+							+ txtStockID.getText() + "','"
+							+ txtStockName.getText() + "','"
+							+ txtStockDes.getText() + "','"
+							+ txtStockOnHand.getText() + "','"
+							+ txtStockPrice.getText() + "')";
+					st.executeUpdate(_query);
 				} else {
 					st.executeUpdate(
 							"UPDATE lpa_stock SET " + 
@@ -851,15 +858,15 @@ public class main extends JFrame {
 						    "lpa_stock_desc = '" + txtStockDes.getText() + "'," +
 						    "lpa_stock_onhand = '" + txtStockOnHand.getText() + "'," +
 						    "lpa_stock_price = '" + txtStockPrice.getText() + "' " +
-						    "WHERE lpa_stock_ID = '"+ txtStockID.getText() +"' LIMIT 1;"
+						    "WHERE lpa_stock_ID = '"+StockID+"' LIMIT 1;"
 				    );
 				}
 				searchStockData(txtStockSearch.getText().toString());
 				JOptionPane.showMessageDialog(null, "Record saved!");
 	         	ifStock.setVisible(false);
 			}
-		} catch (SQLException e) {
-        	System.out.print(e.getMessage().toString());
+		} catch (SQLException ex) {
+        	System.out.print(ex.getMessage().toString());
 		}		
 	}
 	private void deleteStock(String text) {
@@ -879,13 +886,13 @@ public class main extends JFrame {
 		}
 	}
 	
-	private void searchUsersData(String searchData ) {
+	private void searchUsersData(final String searchData ) {
 		try {
 
 			ResultSet rs = (ResultSet) st.executeQuery(
 				"SELECT * FROM lpa_users WHERE lpa_User_status <> 'D' AND " + 
-			    "(lpa_User_ID LIKE '%" + txtUserID /*pass value by reference*/ + "%' OR " +
-			    "lpa_user_username LIKE '%" + txtUserFirstName /*pass value by reference*/ + "%');" 
+			    "(lpa_User_ID LIKE '%" + searchData + "%' OR " +
+			    "lpa_user_username LIKE '%" + searchData + "%');" 
 			);
 			if(rs.next()) {
 			 usersModel = (DefaultTableModel) tblSearchUsers.getModel();
@@ -1567,22 +1574,35 @@ public class main extends JFrame {
 	
 	public void saveInvoice() {
 		try {
-			int invoiceNumber = genID();
-			
+			int invoiceNumber = genID();			
 			SimpleDateFormat sDF = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-			st.executeUpdate(
-					"INSERT INTO lpa_invoices (lpa_inv_no,lpa_inv_date,lpa_inv_client_ID,lpa_inv_client_name,lpa_inv_amount,lpa_inv_client_address,lpa_inv_status) "
-							+ "VALUES (" + invoiceNumber + ",'" + sDF.format(new Date()) + "','" + txtCliendId.getText()
-							+ "','" + txtName.getText() + "'," + totalAmountInvoice + ",'"+txtAddress.getText() +"','A');");
+			String query ="INSERT INTO lpa_invoices (lpa_inv_no,lpa_inv_date,lpa_inv_client_ID,lpa_inv_client_name,lpa_inv_amount,lpa_inv_client_address,lpa_inv_status) "
+					+ "VALUES (" + invoiceNumber + ",'" + sDF.format(new Date()) + "','" + txtCliendId.getText()
+					+ "','" + txtName.getText() + "'," + totalAmountInvoice + ",'"+txtAddress.getText() +"','A');";
+			
+			st.executeUpdate(query);
 			
 			for(int row = 0;row < invoicedTtems.getRowCount();row++) {
+				String subQuery=
+						"INSERT INTO lpa_invoice_items (lpa_invitem_no,"
+						+ "lpa_invitem_inv_no,"
+						+ "lpa_invitem_stock_ID,"
+						+"lpa_invitem_stock_name,"
+						+ "lpa_invitem_qty,"
+						+ "lpa_invitem_stock_price,"
+						+ "lpa_invitem_stock_amount,"
+						+ "lpa_inv_status"
+						+ ") "
+						+"VALUES ('"+ genID() + "','"
+								+invoiceNumber+"',"
+								+ "'"+invoicedTtems.getValueAt(row, 0)+"',"
+								+ "'"+invoicedTtems.getValueAt(row, 1)+"','"+
+								invoicedTtems.getValueAt(row, 3)+"',"
+								+invoicedTtems.getValueAt(row, 2)
+								+","+invoicedTtems.getValueAt(row, 4)+","
+								+ "'a');";
 				
-				st.executeUpdate(
-						"INSERT INTO lpa_invoice_items (lpa_invitem_inv_no,lpa_invitem_stock_ID,"
-						+"lpa_invitem_stock_name,lpa_invitem_qty,lpa_invitem_stock_price,lpa_invitem_stock_amount,lpa_inv_status) "
-								+"VALUES (" +invoiceNumber+","+invoicedTtems.getValueAt(row, 0)+",'"+invoicedTtems.getValueAt(row, 1)+"',"+
-								invoicedTtems.getValueAt(row, 3)+","+invoicedTtems.getValueAt(row, 2)+","+invoicedTtems.getValueAt(row, 4)
-								+",'a');");
+				st.executeUpdate(subQuery);
 				}
 
 			searchInvoicesData(txtSalesSearch.getText().toString());
@@ -1720,12 +1740,13 @@ public class main extends JFrame {
 	
 	private void searchClientsData(String searchData) {
 		try {
+			
+			String query="SELECT * FROM lpa_clients WHERE lpa_client_status <> 'D' AND " + //insert appropriate condition
+				    "(lpa_client_ID LIKE '%" + searchData + "%' OR " +
+				    "lpa_client_firstname LIKE '%" + searchData + "%' OR lpa_client_lastname LIKE '%"+ searchData + "%');"; 
 
-			ResultSet rs = (ResultSet) st.executeQuery(
-				"SELECT * FROM lpa_clients WHERE lpa_client_status  'D' AND " + //insert appropriate condition
-			    "(lpa_client_ID LIKE '%" + searchData + "%' OR " +
-			    "lpa_client_firstname LIKE '%" + searchData + "%' OR lpa_client_lastname LIKE '%"+ searchData + "%');" 
-			);
+			ResultSet rs = (ResultSet) st.executeQuery(query);
+			
 			if(rs.next()) {
 			 clientsModel = (DefaultTableModel) tblSearchClients.getModel();
 			 clientsModel.getDataVector().removeAllElements();
@@ -1899,7 +1920,7 @@ public class main extends JFrame {
 		if (result == JOptionPane.YES_OPTION) { 
 			try {
 				st.executeUpdate("UPDATE lpa_clients SET lpa_client_status = 'D'" + " WHERE lpa_client_ID = '"
-						+ txtClientIDSearch /*referenced value */ );
+						+ clientID + "' LIMIT 1;");
 				searchClientsData(txtClientsSearch.getText().toString());
 				JOptionPane.showMessageDialog(null, "Record deleted!");
 				ifEditClient.setVisible(false);
