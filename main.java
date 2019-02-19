@@ -44,9 +44,11 @@ public class main extends JFrame {
     public JSeparator mnMenuSep_1,mnMenuSep_2;
     public Dimension screenDims = Toolkit.getDefaultToolkit().getScreenSize();
     public JMenuBar lpa_menuBar;
-    public JInternalFrame ifLogin,ifSearchStock,ifStock,ifSales,ifSearchUsers,ifUsers,ifNewInvoice,ifSearchClients,ifEditClient,ifHelpGuide,ifAbout;
+    public JInternalFrame ifLogin,ifSearchStock,ifStock,ifSales,ifSearchUsers,ifUsers,ifNewInvoice,
+    						ifSearchClients,ifEditClient,ifHelpGuide,ifAbout;
     public JLayeredPane layeredPaneBG,layeredPaneFG;
-    public JScrollPane searchScrollPaneStock,searchScrollPaneUsers,searchScrollPaneSales,newInvoiceScrollPane,searchScrollPaneClients;
+    public JScrollPane searchScrollPaneStock,searchScrollPaneUsers,searchScrollPaneSales,newInvoiceScrollPane,
+    					searchScrollPaneClients;
     public JTable tblSearchStock,tblSearchUsers,tblSearchSales,tblInvoicedItems,tblSearchClients;
     public DefaultTableModel stockModel,usersModel,invoicesModel,invoicedTtems,clientsModel;
     public JTextField txtUsername,txtClientsSearch;
@@ -56,8 +58,7 @@ public class main extends JFrame {
     public Connection con;
     public Statement st;
     public JLabel lblDisplayName = new JLabel();
-    public JTextField txtStockSearch,
-    					txtStockID,txtStockName,txtStockDes,
+    public JTextField txtStockSearch,txtStockID,txtStockName,txtStockDes,
     					txtUsersSearch,txtEditUsername,txtUserID,
     					txtUserFirstName,txtUserLastName,txtSalesSearch,
     					txtClientIDSearch,txtCliendId,txtName,
@@ -300,6 +301,7 @@ public class main extends JFrame {
 				txtPassword = new JPasswordField();
 				txtPassword.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
+						//call relevant function();
 						do_login();
 					}
 				});
@@ -334,10 +336,10 @@ public class main extends JFrame {
 		rightRenderer.setHorizontalAlignment( JLabel.RIGHT );
 		centerRenderer.setHorizontalAlignment( JLabel.CENTER );
 		
-		
-		//////tblSearchStock.getTableHeader().getColumnModel().getColumn(2).setHeaderRenderer(centerRenderer);
-		//tblSearchStock.getTableHeader().getColumnModel().getColumn(3).setHeaderRenderer(rightRenderer);
-		
+		/*
+		tblSearchStock.getTableHeader().getColumnModel().getColumn(2).setHeaderRenderer(centerRenderer);
+		tblSearchStock.getTableHeader().getColumnModel().getColumn(3).setHeaderRenderer(rightRenderer);
+		*/
 		
 		ifStock = new JInternalFrame("LPA - Stock Record");
 		ifStock.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
@@ -387,6 +389,7 @@ public class main extends JFrame {
 		lblStockDes.setBounds(10, 73, 80, 14);
 		ifStock.getContentPane().add(lblStockDes);
 		
+		//JTextField txtStockOnHand = new JTextField();
 		txtStockOnHand = new JTextField();
 		txtStockOnHand.setForeground(Color.WHITE);
 		txtStockOnHand.setColumns(10);
@@ -400,6 +403,7 @@ public class main extends JFrame {
 		lblStockOnHand.setBounds(10, 104, 80, 14);
 		ifStock.getContentPane().add(lblStockOnHand);
 		
+		//JTextField txtStockPrice = new JTextField();
 		txtStockPrice = new JTextField();
 		txtStockPrice.setForeground(Color.WHITE);
 		txtStockPrice.setColumns(10);
@@ -416,6 +420,7 @@ public class main extends JFrame {
 		JButton btnStockSave = new JButton("Save");
 		btnStockSave.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
+				//call relevant function(txtStockID.getText());
 				saveStockData(txtStockID.getText());
 			}
 		});
@@ -431,9 +436,9 @@ public class main extends JFrame {
 		btnDeleteStock = new JButton("Delete");
 		btnDeleteStock.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				deleteStock(txtStockID.getText());
-				
 				//call relevant function(txtStockID.getText());
+				deleteStock(txtStockID.getText());
+								
 			}
 
 		});
@@ -458,6 +463,7 @@ public class main extends JFrame {
 				txtStockSearch = new JTextField();
 				txtStockSearch.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent arg0) {
+						//searchStockData(txtStockSearch.getText().toString());
 						saveStockData(txtStockSearch.getText().toString());
 					}
 				});
@@ -820,11 +826,13 @@ public class main extends JFrame {
 	        	txtStockOnHand.setText(rs.getString("lpa_stock_onhand"));
 	        	txtStockPrice.setText(rs.getString("lpa_stock_price"));
 	        	
-	        	/*Dimension ifS = ifSearchStock.getSize();
+	        	/*
+	        	Dimension ifS = ifSearchStock.getSize();
 	        	Point IFSS = ifSearchStock.getLocation();
 	        	int ifsX = (int) IFSS.getX(); 
 	        	int ifsY = (int) (IFSS.getY() + ifS.height) + 1; 
-	        	ifStock.setLocation(ifsX,ifsY);*/
+	        	ifStock.setLocation(ifsX,ifsY);
+	        	*/
 	        	ifStock.setVisible(true);
 	        }
 		} catch (SQLException e) {
@@ -832,11 +840,17 @@ public class main extends JFrame {
 		}		
 	}
 	//pass value by reference
+	//public void saveStockData(final String saveData) {
 	public void saveStockData(final String StockID) {
 		try {
 			if(validateStockInfo())
 			{
 				if(saveMode == "new") {
+					/*
+					 st.executeUpdate("INSERT INTO lpa_stock "
+						+ "(lpa_stock_ID,lpa_stock_name,lpa_stock_desc,lpa_stock_onhand,lpa_stock_price,lpa_stock_status) " + "VALUES ('"
+						+ txtStockID.getText() + "'"); //complete the sql statement, matching database coln names and corresponding values
+					 */
 					String _query = "INSERT INTO lpa_stock "
 							+ "(lpa_stock_ID,"
 							+ "lpa_stock_name,"
@@ -858,6 +872,7 @@ public class main extends JFrame {
 						    "lpa_stock_desc = '" + txtStockDes.getText() + "'," +
 						    "lpa_stock_onhand = '" + txtStockOnHand.getText() + "'," +
 						    "lpa_stock_price = '" + txtStockPrice.getText() + "' " +
+						    //"WHERE lpa_stock_ID = '"+ txtStockID.getText() +"' LIMIT 1;"
 						    "WHERE lpa_stock_ID = '"+StockID+"' LIMIT 1;"
 				    );
 				}
@@ -865,6 +880,10 @@ public class main extends JFrame {
 				JOptionPane.showMessageDialog(null, "Record saved!");
 	         	ifStock.setVisible(false);
 			}
+		/*
+		} catch (SQLException e) {
+        	System.out.print(e.getMessage().toString());
+        */
 		} catch (SQLException ex) {
         	System.out.print(ex.getMessage().toString());
 		}		
@@ -886,11 +905,16 @@ public class main extends JFrame {
 		}
 	}
 	
+	//private void searchUsersData(String searchData ) {
 	private void searchUsersData(final String searchData ) {
 		try {
 
 			ResultSet rs = (ResultSet) st.executeQuery(
-				"SELECT * FROM lpa_users WHERE lpa_User_status <> 'D' AND " + 
+				"SELECT * FROM lpa_users WHERE lpa_User_status <> 'D' AND " +
+				
+				 // "(lpa_User_ID LIKE '%" + txtUserID /*pass value by reference*/ + "%' OR " + 
+				 // "lpa_user_username LIKE '%" + txtUserFirstName /*pass value by reference*/ + "%');"
+				 
 			    "(lpa_User_ID LIKE '%" + searchData + "%' OR " +
 			    "lpa_user_username LIKE '%" + searchData + "%');" 
 			);
@@ -1576,6 +1600,12 @@ public class main extends JFrame {
 		try {
 			int invoiceNumber = genID();			
 			SimpleDateFormat sDF = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+			/*
+			st.executeUpdate(
+					"INSERT INTO lpa_invoices (lpa_inv_no,lpa_inv_date,lpa_inv_client_ID,lpa_inv_client_name,lpa_inv_amount,lpa_inv_client_address,lpa_inv_status) "
+							+ "VALUES (" + invoiceNumber + ",'" + sDF.format(new Date()) + "','" + txtCliendId.getText()
+							+ "','" + txtName.getText() + "'," + totalAmountInvoice + ",'"+txtAddress.getText() +"','A');");
+			*/
 			String query ="INSERT INTO lpa_invoices (lpa_inv_no,lpa_inv_date,lpa_inv_client_ID,lpa_inv_client_name,lpa_inv_amount,lpa_inv_client_address,lpa_inv_status) "
 					+ "VALUES (" + invoiceNumber + ",'" + sDF.format(new Date()) + "','" + txtCliendId.getText()
 					+ "','" + txtName.getText() + "'," + totalAmountInvoice + ",'"+txtAddress.getText() +"','A');";
@@ -1583,11 +1613,19 @@ public class main extends JFrame {
 			st.executeUpdate(query);
 			
 			for(int row = 0;row < invoicedTtems.getRowCount();row++) {
+				/*
+				st.executeUpdate(
+						"INSERT INTO lpa_invoice_items (lpa_invitem_inv_no,lpa_invitem_stock_ID,"
+						+"lpa_invitem_stock_name,lpa_invitem_qty,lpa_invitem_stock_price,lpa_invitem_stock_amount,lpa_inv_status) "
+								+"VALUES (" +invoiceNumber+","+invoicedTtems.getValueAt(row, 0)+",'"+invoicedTtems.getValueAt(row, 1)+"',"+
+								invoicedTtems.getValueAt(row, 3)+","+invoicedTtems.getValueAt(row, 2)+","+invoicedTtems.getValueAt(row, 4)
+								+",'a');");
+				*/
 				String subQuery=
 						"INSERT INTO lpa_invoice_items (lpa_invitem_no,"
 						+ "lpa_invitem_inv_no,"
 						+ "lpa_invitem_stock_ID,"
-						+"lpa_invitem_stock_name,"
+						+ "lpa_invitem_stock_name,"
 						+ "lpa_invitem_qty,"
 						+ "lpa_invitem_stock_price,"
 						+ "lpa_invitem_stock_amount,"
@@ -1740,6 +1778,13 @@ public class main extends JFrame {
 	
 	private void searchClientsData(String searchData) {
 		try {
+			/*
+			ResultSet rs = (ResultSet) st.executeQuery(
+				"SELECT * FROM lpa_clients WHERE lpa_client_status  'D' AND " + //insert appropriate condition
+			    "(lpa_client_ID LIKE '%" + searchData + "%' OR " +
+			    "lpa_client_firstname LIKE '%" + searchData + "%' OR lpa_client_lastname LIKE '%"+ searchData + "%');" 
+			);
+			*/
 			
 			String query="SELECT * FROM lpa_clients WHERE lpa_client_status <> 'D' AND " + //insert appropriate condition
 				    "(lpa_client_ID LIKE '%" + searchData + "%' OR " +
@@ -1784,11 +1829,13 @@ public class main extends JFrame {
 	        	txtClientAddress.setText(rs.getString("lpa_client_address"));
 	        	txtClientPhone.setText(rs.getString("lpa_client_phone"));
 	        	
-	        	/*Dimension ifS = ifSearchclient.getSize();
+	        	/*
+	        	Dimension ifS = ifSearchclient.getSize();
 	        	Point IFSS = ifSearchclient.getLocation();
 	        	int ifsX = (int) IFSS.getX(); 
 	        	int ifsY = (int) (IFSS.getY() + ifS.height) + 1; 
-	        	ifclient.setLocation(ifsX,ifsY);*/
+	        	ifclient.setLocation(ifsX,ifsY);
+	        	*/
 	        	ifEditClient.setVisible(true);
 	        }
 		} catch (SQLException e) {
@@ -1921,6 +1968,7 @@ public class main extends JFrame {
 			try {
 				st.executeUpdate("UPDATE lpa_clients SET lpa_client_status = 'D'" + " WHERE lpa_client_ID = '"
 						+ clientID + "' LIMIT 1;");
+						//+ txtClientIDSearch /*referenced value */ );
 				searchClientsData(txtClientsSearch.getText().toString());
 				JOptionPane.showMessageDialog(null, "Record deleted!");
 				ifEditClient.setVisible(false);
