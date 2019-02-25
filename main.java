@@ -480,7 +480,7 @@ public class main extends JFrame {
 				    public boolean isCellEditable(int row, int column) {
 				       /* Set all cells to NON Editable 
 				        *   - change return value to "true" for Editable 
-				        * */ 
+				        */ 
 				       return false;
 				    }
           }
@@ -617,7 +617,7 @@ public class main extends JFrame {
 		    public boolean isCellEditable(int row, int column) {
 		       /* Set all cells to NON Editable 
 		        *   - change return value to "true" for Editable 
-		        * */ 
+		        */ 
 		       return false;
 		    }
   }
@@ -727,12 +727,15 @@ public class main extends JFrame {
 	public void do_login() {
 		admin = false;
 		try {
+			
 			ResultSet rs = (ResultSet) st.executeQuery(
 	        		"SELECT lpa_user_firstname,lpa_user_lastname,lpa_user_group,lpa_user_ID FROM lpa_users WHERE " + 
 	        		"lpa_user_username = '" + txtUsername.getText() + "' AND " +
 	        		"lpa_user_password = '" + new String(txtPassword.getPassword()) + 
 	        		"' LIMIT 1;"
 	        );
+	        
+			
 			if (rs.next()) {
 				lpa_menuBar.setVisible(true);
 				txtUsername.setText("");
@@ -851,7 +854,7 @@ public class main extends JFrame {
 						+ "(lpa_stock_ID,lpa_stock_name,lpa_stock_desc,lpa_stock_onhand,lpa_stock_price,lpa_stock_status) " + "VALUES ('"
 						+ txtStockID.getText() + "'"); //complete the sql statement, matching database coln names and corresponding values
 					 */
-					String _query = "INSERT INTO lpa_stock "
+					String query2 = "INSERT INTO lpa_stock "
 							+ "(lpa_stock_ID,"
 							+ "lpa_stock_name,"
 							+ "lpa_stock_desc,"
@@ -863,7 +866,7 @@ public class main extends JFrame {
 							+ txtStockDes.getText() + "','"
 							+ txtStockOnHand.getText() + "','"
 							+ txtStockPrice.getText() + "')";
-					st.executeUpdate(_query);
+					st.executeUpdate(query2);
 				} else {
 					st.executeUpdate(
 							"UPDATE lpa_stock SET " + 
@@ -1537,10 +1540,16 @@ public class main extends JFrame {
 		});
 		ifNewInvoice.add(btnSaveInvoice);
 		
+		//Button was created but had no function
 		JButton btnClose = new JButton("Close");
 		btnClose.setBounds(512, 383, 95, 23);
 		btnClose.setForeground(Color.WHITE);
 		btnClose.setBackground(Color.DARK_GRAY);
+		btnClose.addActionListener(new ActionListener() {		//ActionListener added to close the window
+			public void actionPerformed(ActionEvent arg0) {
+				ifNewInvoice.setVisible(false);
+			}
+		});
 		ifNewInvoice.add(btnClose);
 	}
 	
@@ -2038,7 +2047,7 @@ public class main extends JFrame {
 	}
 	
 	
-	private void buildAboutPane() 
+	private void buildAboutPane()
 	{
 		try {
 			ifAbout = new JInternalFrame("Help Guide");
